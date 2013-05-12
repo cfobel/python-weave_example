@@ -17,12 +17,16 @@ example_code = \
 r"""
 int32_t *i = (int32_t *)a;
 
+
 if(ndim == 2) {
-    Example<2> t;
-    t(a, shape);
+    BlitzExample<int32_t, 2> t;
+    blitz::Array<int32_t, 2> A(a, blitz::shape(shape[0], shape[1]),
+                               blitz::neverDeleteData);
+    t(A);
 } else if(ndim == 1) {
-    Example<1> t;
-    t(a, shape);
+    BlitzExample<int32_t, 1> t;
+    blitz::Array<int32_t, 1> A(a, shape[0], blitz::neverDeleteData);
+    t(A);
 }
 """
 
@@ -30,7 +34,8 @@ def example(a):
     ndim = N.int(a.ndim)
     shape = N.array(a.shape, dtype=N.int32)
     inline(example_code, ['a', 'shape', 'ndim'],
-           headers=['<stdint.h>', '"example.hpp"'],
+           headers=['<iostream>', '<stdint.h>', '"example.hpp"',
+                    '<blitz/array.h>'],
            include_dirs=[os.getcwd()],
            compiler='gcc', force=1)
 
