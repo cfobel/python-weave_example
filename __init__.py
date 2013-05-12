@@ -17,8 +17,13 @@ example_code = \
 r"""
 int32_t *i = (int32_t *)a;
 
-Example t;
-t(a, ndim, shape);
+if(ndim == 2) {
+    Example<2> t;
+    t(a, shape);
+} else if(ndim == 1) {
+    Example<1> t;
+    t(a, shape);
+}
 """
 
 def example(a):
@@ -33,6 +38,8 @@ def example(a):
 def go():
     d = N.arange(100, dtype=N.int32)
     d.shape = 10, 10
+    example(d)
+    d = N.arange(100, dtype=N.int32)
     example(d)
 
 
